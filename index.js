@@ -10,8 +10,26 @@ let states = [];
 
 //console.log(states);
 
+function getStuff(url, value) {
+  fetch(url).then(function (req) {
+    return req.json();
+  }).then(function (json) {
+    console.log(json);
+    renderList(json.data, value);
+  });
+}
 
+function renderList(json, value) {
+  for (let i = 0; i < json.length & i < value; i++) {
+    let name = json[i].fullName;
+    let description = json[i].description;
+    let link = json[i].url;
+    $('ul.names').append(`<li><h1>${name}</h1><br>
+<p>${description}</p><br><p><a href='${link}'>Link</a></p>
+</li>`);
 
+  }
+}
 
 
 function getResults() {
@@ -29,26 +47,11 @@ function getResults() {
       };
 
       let pString = $.param(params);
-      //pString += `&stateCode=${states}`;
       let urlTrue = url + pString;
-      fetch(urlTrue).then(function (req) {
-        return req.json();
-      }).then(function (json) {
-        console.log(json);
-        for (let i = 0; i < json.data.length & i < value; i++) {
-          let name = json.data[i].fullName;
-          let description = json.data[i].description;
-          let link = json.data[i].url;
-          $('ul.names').append(`<li><h1>${name}</h1><br>
-      <p>${description}</p><br><p><a href='${link}'>Link</a></p>
-      </li>`);
 
+      getStuff(urlTrue, value)
 
-        }
-
-      });
-
-    }
+    } //end else
   });
 }
 
